@@ -7,7 +7,7 @@
   "umd:main": "dist/index.umd.js",
   "source": "src/index.ts",
   "types": "dist/src/index.d.ts",
-  "unpkg": "dist/preact.umd.js",
+  "unpkg": "dist/index.umd.js",
   "license": "MIT",
   "author": "Jose Albizures <jose@albizures.com>",
   "files": [
