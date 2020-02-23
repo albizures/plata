@@ -1,3 +1,3 @@
 module.exports = {
-  presets: [["@babel/preset-typescript", { jsxPragma: "H.create" }]]
+  presets: [["@babel/preset-typescript", { jsxPragma: "P.create" }]]
 };

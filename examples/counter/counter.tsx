@@ -1,14 +1,13 @@
-import * as H from "../../src";
+import * as P from "../../src";
 
 const Counter = () => {
-  const ref = H.createRef();
+  const ref = P.createRef();
   let counter = 0;
 
   const onClick = () => {
     counter = counter + 1;
-    console.log("lelelel");
 
-    H.replaceContent(ref, counter);
+    P.replaceContent(ref, counter);
   };
 
   return (
@@ -19,4 +18,4 @@ const Counter = () => {
   );
 };
 
-H.render(<Counter />, document.getElementById("root"));
+P.render(<Counter />, document.getElementById("root"));

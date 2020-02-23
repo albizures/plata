@@ -1,4 +1,4 @@
-import * as H from "../../src";
+import * as P from "../../src";
 
 interface Todo {
   name: string;
@@ -6,11 +6,11 @@ interface Todo {
 
 interface PropTypes {
   name: string;
-  onDone: (ref: H.Ref) => void;
+  onDone: (ref: P.Ref) => void;
 }
 
 const Todo = (props: PropTypes) => {
-  const ref = H.createRef();
+  const ref = P.createRef();
   return (
     <li ref={ref}>
       {props.name}
@@ -20,8 +20,8 @@ const Todo = (props: PropTypes) => {
 };
 
 const Counter = () => {
-  const listRef = H.createRef();
-  const inputRef = H.createRef<HTMLInputElement>();
+  const listRef = P.createRef();
+  const inputRef = P.createRef<HTMLInputElement>();
   let todos: Todo[] = [];
 
   const onAdd = () => {
@@ -34,13 +34,13 @@ const Counter = () => {
     const todo = { name };
     todos.push(todo);
 
-    const onDone = (ref: H.Ref) => {
+    const onDone = (ref: P.Ref) => {
       const index = todos.indexOf(todo);
       todos.splice(index, 1);
-      H.remove(ref);
+      P.remove(ref);
     };
 
-    H.append(listRef, <Todo onDone={onDone} name={name} />);
+    P.append(listRef, <Todo onDone={onDone} name={name} />);
     inputRef.current.value = "";
   };
 
@@ -56,4 +56,4 @@ const Counter = () => {
   );
 };
 
-H.render(<Counter />, document.getElementById("root"));
+P.render(<Counter />, document.getElementById("root"));

@@ -1,1 +1,1 @@
-export * from "./h";
+export * from "./plata";
