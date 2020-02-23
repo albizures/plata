@@ -19,4 +19,4 @@ const Counter = () => {
   );
 };
 
-H.append(<Counter />, document.getElementById("root"));
+H.render(<Counter />, document.getElementById("root"));
