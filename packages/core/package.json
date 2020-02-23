@@ -6,7 +6,7 @@
   "module": "dist/index.module.js",
   "umd:main": "dist/index.umd.js",
   "source": "src/index.ts",
-  "types": "dist/src/index.d.ts",
+  "types": "dist/index.d.ts",
   "unpkg": "dist/index.umd.js",
   "license": "MIT",
   "author": "Jose Albizures <jose@albizures.com>",
