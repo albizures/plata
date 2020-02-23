@@ -40,7 +40,7 @@ const initRef = <T extends ElementNames>(
   props.ref.current = element;
 };
 
-const createElement = <E extends ElementNames, C extends Component>(
+const create = <E extends ElementNames, C extends Component>(
   name: E | C,
   props: Elements[E] | Parameters<C>[0],
   ...children: Child[]
@@ -152,12 +152,4 @@ export * from "./types";
 export type MouseEvent<T> = HMouseEvent<T>;
 export type EventChange<T> = HChangeEvent<T>;
 export type Event<T> = HEvent<T>;
-export {
-  render,
-  replaceContent,
-  remove,
-  setStyles,
-  createElement,
-  createRef,
-  append
-};
+export { render, replaceContent, remove, setStyles, create, createRef, append };

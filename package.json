@@ -1,31 +1,24 @@
 {
-  "name": "create-element",
+  "name": "@plata/core",
   "version": "1.0.0",
   "main": "dist/index.js",
   "module": "dist/index.module.js",
   "umd:main": "dist/index.umd.js",
-  "unpkg": "dist/index.umd.js",
   "source": "src/index.ts",
+  "types": "dist/src/index.d.ts",
   "license": "MIT",
   "files": [
-    "src",
     "dist"
   ],
-  "exports": {
-    "./package.json": "./package.json",
-    "./": "./"
-  },
   "scripts": {
     "test": "microbundle build --raw --no-sourcemap",
     "start": "parcel examples/index.html"
   },
-  "dependencies": {
+  "dependencies": {},
+  "devDependencies": {
     "@babel/preset-typescript": "^7.8.3",
     "microbundle": "^0.11.0",
     "parcel": "^1.12.4",
-    "utility-types": "^3.10.0"
-  },
-  "devDependencies": {
     "typescript": "^3.8.2"
   }
 }
