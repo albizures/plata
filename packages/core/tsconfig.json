@@ -1,13 +1,3 @@
 {
-  "compilerOptions": {
-    "target": "esnext",
-    "module": "ESNext",
-    "moduleResolution": "node",
-    "lib": ["es2015", "es2017", "dom", "dom.iterable"],
-    "typeRoots": ["./types", "./node_modules/@types"],
-    "jsxFactory": "P.create",
-    "jsx": "react",
-    "esModuleInterop": true
-  },
-  "exclude": ["node_modules", "typings"]
+  "extends": "../../tsconfig.json"
 }
