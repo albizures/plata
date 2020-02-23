@@ -1,6 +1,6 @@
 {
   "name": "@plata/core",
-  "version": "0.0.1",
+  "version": "0.0.3",
   "description": "A 1kb JS library for building user interfaces",
   "main": "dist/index.js",
   "module": "dist/index.module.js",
@@ -14,6 +14,7 @@
     "dist"
   ],
   "scripts": {
+    "prepublish": "rm -rf dist && yarn build",
     "build": "microbundle build --raw --no-sourcemap"
   },
   "dependencies": {},
