@@ -1,26 +1,15 @@
 {
-  "name": "@plata/core",
+  "name": "plata-monorepo",
   "version": "0.0.1",
+  "main": "examples/index.js",
   "description": "A 1kb JS library for building user interfaces",
-  "main": "dist/index.js",
-  "module": "dist/index.module.js",
-  "umd:main": "dist/index.umd.js",
-  "source": "src/index.ts",
-  "types": "dist/src/index.d.ts",
+  "repository": "https://github.com/albizures/plata.git",
+  "author": "Jose Albizures <albizures3601@gmail.com>",
   "license": "MIT",
-  "author": "Jose Albizures <jose@albizures.com>",
-  "files": [
-    "dist"
-  ],
   "scripts": {
-    "build": "microbundle build --raw --no-sourcemap",
     "start": "parcel examples/index.html"
   },
-  "dependencies": {},
-  "devDependencies": {
-    "@babel/preset-typescript": "^7.8.3",
-    "microbundle": "^0.11.0",
-    "parcel": "^1.12.4",
-    "typescript": "^3.8.2"
+  "dependencies": {
+    "parcel": "^1.12.4"
   }
 }

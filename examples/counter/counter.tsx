@@ -1,4 +1,4 @@
-import * as P from "../../src";
+import * as P from "../../packages/core/src";
 
 const Counter = () => {
   const ref = P.createRef();

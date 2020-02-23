@@ -1,0 +1,24 @@
+{
+  "name": "@plata/core",
+  "version": "0.0.1",
+  "description": "A 1kb JS library for building user interfaces",
+  "main": "dist/index.js",
+  "module": "dist/index.module.js",
+  "umd:main": "dist/index.umd.js",
+  "source": "src/index.ts",
+  "types": "dist/src/index.d.ts",
+  "license": "MIT",
+  "author": "Jose Albizures <jose@albizures.com>",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "microbundle build --raw --no-sourcemap"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@babel/preset-typescript": "^7.8.3",
+    "microbundle": "^0.11.0",
+    "typescript": "^3.8.2"
+  }
+}
