@@ -7,7 +7,7 @@
   "author": "Jose Albizures <albizures3601@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "start": "parcel examples/index.html"
+    "start": "parcel examples/index.html --open"
   },
   "dependencies": {
     "parcel": "^1.12.4"
