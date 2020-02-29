@@ -1,21 +1,22 @@
-import * as P from "../../packages/core/src";
+import * as P from '../../packages/core/src';
 
 const Counter = () => {
-  const ref = P.createRef();
-  let counter = 0;
+	const spanRef = P.createRef<HTMLSpanElement>();
+	const buttonRef = P.createRef<HTMLButtonElement>();
+	let counter = 0;
 
-  const onClick = () => {
-    counter = counter + 1;
+	P.on(buttonRef, 'click', () => {
+		counter = counter + 1;
 
-    P.replaceContent(ref, counter);
-  };
+		P.replaceContent(spanRef, counter);
+	});
 
-  return (
-    <div>
-      <span ref={ref}>{counter}</span>
-      <button onClick={onClick}>click me</button>
-    </div>
-  );
+	return (
+		<div>
+			<span ref={spanRef}>{counter}</span>
+			<button ref={buttonRef}>click me</button>
+		</div>
+	);
 };
 
-P.render(<Counter />, document.getElementById("root"));
+P.render(<Counter />, document.getElementById('root'));
