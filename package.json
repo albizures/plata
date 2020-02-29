@@ -1,6 +1,6 @@
 {
   "name": "plata-monorepo",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "main": "examples/index.html",
   "description": "A 1kb JS library for building user interfaces",
   "repository": "https://github.com/albizures/plata.git",
