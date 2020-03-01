@@ -1,26 +1,27 @@
 {
-  "name": "@plata/core",
-  "version": "0.0.4",
-  "description": "A 1kb JS library for building user interfaces",
-  "main": "dist/index.js",
-  "module": "dist/index.module.js",
-  "umd:main": "dist/index.umd.js",
-  "source": "src/index.ts",
-  "types": "dist/index.d.ts",
-  "unpkg": "dist/index.umd.js",
-  "license": "MIT",
-  "author": "Jose Albizures <jose@albizures.com>",
-  "files": [
-    "dist"
-  ],
-  "scripts": {
-    "prepublish": "rm -rf dist && yarn build",
-    "build": "microbundle build --raw --no-sourcemap"
-  },
-  "dependencies": {},
-  "devDependencies": {
-    "@babel/preset-typescript": "^7.8.3",
-    "microbundle": "^0.11.0",
-    "typescript": "^3.8.2"
-  }
+	"name": "@plata/core",
+	"version": "0.0.4",
+	"description": "A 1kb JS library for building user interfaces",
+	"main": "dist/index.js",
+	"module": "dist/index.module.js",
+	"umd:main": "dist/index.umd.js",
+	"source": "src/index.ts",
+	"types": "dist/index.d.ts",
+	"unpkg": "dist/index.umd.js",
+	"license": "MIT",
+	"author": "Jose Albizures <jose@albizures.com>",
+	"files": [
+		"dist"
+	],
+	"scripts": {
+		"prepublish": "rm -rf dist && yarn build",
+		"build": "microbundle build --raw --no-sourcemap",
+		"watch": "microbundle watch --raw"
+	},
+	"dependencies": {},
+	"devDependencies": {
+		"@babel/preset-typescript": "^7.8.3",
+		"microbundle": "^0.11.0",
+		"typescript": "^3.8.2"
+	}
 }

@@ -6,13 +6,16 @@ import {
 	OnReady,
 	Styles,
 	ElementNames,
-	Elements,
+	Attributes,
 	EventHandler,
+	Plugin,
 } from './types';
 
-const initRef = <T extends ElementNames>(
-	element: HTMLElementTagNameMap[T],
-	props: Elements[T],
+export const plugins: Plugin[] = [];
+
+const initRef = <E extends ElementNames>(
+	element: HTMLElementTagNameMap[E],
+	props: Attributes<HTMLElementTagNameMap[E]>,
 ) => {
 	if (!props || !props.ref) {
 		return;
@@ -23,7 +26,7 @@ const initRef = <T extends ElementNames>(
 
 const create = <E extends ElementNames, C extends Component>(
 	name: E | C,
-	props: Elements[E] | Parameters<C>[0],
+	props: Attributes<HTMLElementTagNameMap[E]> | Parameters<C>[0],
 	...children: Child[]
 ): HTMLElement => {
 	if (typeof name === 'function') {
@@ -33,12 +36,19 @@ const create = <E extends ElementNames, C extends Component>(
 		});
 	}
 
-	const attr = props as Elements[E];
+	const attr = props as Attributes<HTMLElementTagNameMap[E]>;
 
 	const element = document.createElement(name);
 
 	appendChild(element, children);
 	initRef(element, attr);
+
+	console.log(plugins);
+
+	plugins.forEach((plugin) => {
+		// TODO: catch any error and throw and custom error
+		plugin(element, attr);
+	});
 
 	Object.assign(element, props);
 
@@ -71,7 +81,7 @@ const on = <T extends HTMLElement>(
 	handler: EventHandler<T>,
 ) => {
 	if (ref.current) {
-		ref.current.addEventListener(eventName, handler);
+		ref.current.addEventListener(eventName, handler as EventListener);
 	} else {
 		onReady(ref, () => on(ref, eventName, handler));
 	}
@@ -83,7 +93,7 @@ const off = <T extends HTMLElement>(
 	handler: EventHandler<T>,
 ) => {
 	if (ref.current) {
-		ref.current.removeEventListener(eventName, handler);
+		ref.current.removeEventListener(eventName, handler as EventListener);
 	} else {
 		onReady(ref, () => on(ref, eventName, handler));
 	}
@@ -126,8 +136,8 @@ const replaceContent = <T extends HTMLElement>(
 };
 
 const createRef = <T>(): Ref<T> => {
-	const handlers = [];
-	let value: T = null;
+	const handlers: OnReady[] = [];
+	let value: T;
 
 	const ref = {
 		handlers,
@@ -135,11 +145,8 @@ const createRef = <T>(): Ref<T> => {
 			if (value === null) {
 				value = newValue;
 				handlers.forEach((handler) => {
-					try {
-						handler(value);
-					} catch (error) {
-						console.log(error);
-					}
+					// TODO: catch any error and throw and custom error
+					handler(value);
 				});
 
 				handlers.length = 0;

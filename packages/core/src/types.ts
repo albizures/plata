@@ -6,17 +6,26 @@ export type Component<P = {}> = (
 	props: P & { children?: Children },
 ) => HTMLElement;
 
-type TargetEvent<E, T> = Omit<E, 'target'> & {
+type TargetEvent<E, T extends HTMLElement> = Omit<E, 'target'> & {
 	target: T;
 };
 
-export type PEvent<T> = TargetEvent<Event, T>;
-export type PMouseEvent<T> = TargetEvent<MouseEvent, T>;
-export type PChangeEvent<T> = PEvent<T>;
+export type PEvent<T extends HTMLElement> = TargetEvent<Event, T>;
+export type PMouseEvent<T extends HTMLElement> = TargetEvent<MouseEvent, T>;
+export type PChangeEvent<T extends HTMLElement> = PEvent<T>;
 
-export type EventHandler<T> = (event: PEvent<T>) => unknown;
-export type MouseEventHandler<T> = (event: PMouseEvent<T>) => unknown;
-export type ChangeEventHandler<T> = (event: PChangeEvent<T>) => unknown;
+export interface EventHandlers<T extends HTMLElement> {
+	onChange?: (event: PChangeEvent<T>) => void;
+	onClick?: (event: PEvent<T>) => void;
+}
+
+export type EventHandler<T extends HTMLElement> = (event: PEvent<T>) => unknown;
+export type MouseEventHandler<T extends HTMLElement> = (
+	event: PMouseEvent<T>,
+) => unknown;
+export type ChangeEventHandler<T extends HTMLElement> = (
+	event: PChangeEvent<T>,
+) => unknown;
 
 export type OnReady = <T>(ref: T) => void;
 export interface Ref<T = null> {
@@ -24,12 +33,21 @@ export interface Ref<T = null> {
 	handlers: OnReady[];
 }
 
+type OmittedAttr = 'children' | 'styles' | 'onchange' | 'onclick';
+
 export type ElementNames = keyof HTMLElementTagNameMap;
-export type Attributes<T> = Partial<Omit<T, 'children' | 'styles'>> & {
+export type Attributes<T extends HTMLElement> = Partial<
+	Omit<T, OmittedAttr>
+> & {
 	children?: Children;
 	styles?: Styles;
 	ref?: Ref<T>;
-};
+} & EventHandlers<T>;
+
+export type Plugin = <E extends ElementNames>(
+	element: HTMLElementTagNameMap[E],
+	props: Attributes<HTMLElementTagNameMap[E]>,
+) => void;
 
 export type Elements = {
 	[P in ElementNames]: Attributes<HTMLElementTagNameMap[P]>;
