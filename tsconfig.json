@@ -1,13 +1,13 @@
 {
-  "compilerOptions": {
-    "target": "esnext",
-    "module": "ESNext",
-    "moduleResolution": "node",
-    "lib": ["es2015", "es2017", "dom"],
-    "typeRoots": ["./types", "./node_modules/@types"],
-    "jsxFactory": "P.create",
-    "jsx": "react",
-    "esModuleInterop": true
-  },
-  "exclude": ["node_modules", "typings"]
+	"compilerOptions": {
+		"target": "esnext",
+		"module": "ESNext",
+		"moduleResolution": "node",
+		"lib": ["es2015", "es2017", "dom"],
+		"typeRoots": ["./types", "./node_modules/@types"],
+		"jsxFactory": "P.create",
+		"jsx": "react",
+		"esModuleInterop": true
+	},
+	"exclude": ["node_modules", "typings"]
 }

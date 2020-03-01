@@ -1,18 +1,21 @@
 {
-  "name": "plata-monorepo",
-  "version": "0.0.4",
-  "main": "examples/index.html",
-  "description": "A 1kb JS library for building user interfaces",
-  "repository": "https://github.com/albizures/plata.git",
-  "author": "Jose Albizures <albizures3601@gmail.com>",
-  "license": "MIT",
-  "scripts": {
-    "start": "parcel examples/index.html --open"
-  },
-  "dependencies": {
-    "parcel": "^1.12.4"
-  },
-  "devDependencies": {
-    "typescript": "^3.8.2"
-  }
+	"name": "plata-monorepo",
+	"private": true,
+	"version": "0.0.4",
+	"main": "examples/index.html",
+	"description": "A 1kb JS library for building user interfaces",
+	"repository": "https://github.com/albizures/plata.git",
+	"author": "Jose Albizures <albizures3601@gmail.com>",
+	"license": "MIT",
+	"workspaces": {
+		"packages": [
+			"packages/*"
+		]
+	},
+	"dependencies": {
+		"lerna": "^3.20.2"
+	},
+	"devDependencies": {
+		"typescript": "^3.8.2"
+	}
 }
