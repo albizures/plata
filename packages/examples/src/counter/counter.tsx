@@ -1,4 +1,4 @@
-import * as P from '../../packages/core/src';
+import * as P from '@plata/core';
 
 const Counter = () => {
 	const spanRef = P.createRef<HTMLSpanElement>();

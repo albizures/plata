@@ -16,7 +16,7 @@
 	"scripts": {
 		"prepublish": "rm -rf dist && yarn build",
 		"build": "microbundle build --raw --no-sourcemap",
-		"watch": "microbundle watch --raw --no-sourcemap"
+		"watch": "microbundle watch --raw"
 	},
 	"peerDependencies": {
 		"@plata/core": "^0.0.4"

@@ -1,4 +1,4 @@
-import * as P from '../../packages/core/src';
+import * as P from '@plata/core';
 
 interface Todo {
 	name: string;

@@ -1,0 +1,14 @@
+{
+	"name": "@plata/examples",
+	"version": "1.0.0",
+	"main": "src/index.html",
+	"license": "MIT",
+	"scripts": {
+		"start": "parcel src/index.html --open"
+	},
+	"dependencies": {
+		"@plata/core": "*",
+		"@plata/prop-events": "*",
+		"parcel": "^1.12.4"
+	}
+}
