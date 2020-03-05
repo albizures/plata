@@ -1,0 +1,34 @@
+{
+	"name": "@plata/observables",
+	"version": "0.0.6",
+	"description": "plata plugin to support observables",
+	"main": "dist/index.js",
+	"module": "dist/index.module.js",
+	"umd:main": "dist/index.umd.js",
+	"source": "src/index.ts",
+	"types": "dist/index.d.ts",
+	"unpkg": "dist/index.umd.js",
+	"license": "MIT",
+	"author": "Jose Albizures <jose@albizures.com>",
+	"files": [
+		"dist",
+		"src"
+	],
+	"scripts": {
+		"clean": "rm -rf dist",
+		"prepublish": "yarn build",
+		"prebuild": "yarn clean",
+		"build": "microbundle build --raw --no-sourcemap",
+		"watch": "microbundle watch --raw --no-compress"
+	},
+	"peerDependencies": {
+		"@plata/core": "^0.0.6"
+	},
+	"dependencies": {},
+	"devDependencies": {
+		"@babel/preset-typescript": "^7.8.3",
+		"microbundle": "^0.11.0",
+		"typescript": "^3.8.2",
+		"@plata/core": "*"
+	}
+}
