@@ -1,12 +1,18 @@
 {
 	"name": "plata-monorepo",
 	"private": true,
-	"version": "0.0.4",
+	"version": "0.0.6",
 	"main": "examples/index.html",
 	"description": "A 1kb JS library for building user interfaces",
 	"repository": "https://github.com/albizures/plata.git",
 	"author": "Jose Albizures <albizures3601@gmail.com>",
 	"license": "MIT",
+	"scripts": {
+		"start": "lerna run start",
+		"build": "lerna run build",
+		"test:types": "tsc --noEmit",
+		"watch": "yarn lerna run watch --parallel"
+	},
 	"workspaces": {
 		"packages": [
 			"packages/*"

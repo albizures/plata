@@ -1,6 +1,6 @@
 {
 	"name": "@plata/prop-events",
-	"version": "0.0.4",
+	"version": "0.0.6",
 	"description": "plata plugin to support react-like prop events",
 	"main": "dist/index.js",
 	"module": "dist/index.module.js",
@@ -11,15 +11,18 @@
 	"license": "MIT",
 	"author": "Jose Albizures <jose@albizures.com>",
 	"files": [
-		"dist"
+		"dist",
+		"src"
 	],
 	"scripts": {
-		"prepublish": "rm -rf dist && yarn build",
+		"clean": "rm -rf dist",
+		"prepublish": "yarn build",
+		"prebuild": "yarn clean",
 		"build": "microbundle build --raw --no-sourcemap",
-		"watch": "microbundle watch --raw"
+		"watch": "microbundle watch --raw --no-compress"
 	},
 	"peerDependencies": {
-		"@plata/core": "^0.0.4"
+		"@plata/core": "^0.0.6"
 	},
 	"dependencies": {},
 	"devDependencies": {
