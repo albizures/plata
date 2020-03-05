@@ -1,10 +1,37 @@
-export type Child = string | number | boolean | HTMLElement | HTMLElement[];
+export type Handler<T> = (value: T) => unknown;
+
+export type ObservableWatcher<T> = (
+	newValue: T | null,
+	oldValue: T | null,
+) => void;
+export interface Observable<T> {
+	watch: (handler: ObservableWatcher<T>) => void;
+	value: T;
+}
+
+export interface CustomSupportedType<T> {
+	checkType: (child: unknown) => child is T;
+	parser: (child: T, parent: HTMLElement) => Node[];
+}
+
+export type SimpleChild = string | number | boolean | Node;
+export type ObservableChildren = SimpleChild | SimpleChild[];
+export type ObservableChild = Observable<ObservableChildren>;
+export type ComplexChild = ObservableChild | SimpleChild;
+export type ResolvedChild = ComplexChild | ComplexChild[];
+
+export type Child = ResolvedChild; //| Promise<ResolvedChild>;
+
 export type Children = Child | Child[];
 export type Styles = Partial<CSSStyleDeclaration>;
 
+export type CreatedChild = Node;
+
+export type CreatedChildren = CreatedChild;
+
 export type Component<P = {}> = (
 	props: P & { children?: Children },
-) => HTMLElement;
+) => JSX.Element;
 
 type TargetEvent<E, T extends HTMLElement> = Omit<E, 'target'> & {
 	target: T;
@@ -56,7 +83,7 @@ export type Elements = {
 declare global {
 	namespace JSX {
 		export interface IntrinsicElements extends Elements {}
-		export interface Element extends HTMLElement {}
+		export interface Element extends CreatedChildren {}
 		export interface IntrinsicAttributes {
 			key?: any;
 		}

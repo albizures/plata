@@ -9,9 +9,14 @@ import {
 	Attributes,
 	EventHandler,
 	Plugin,
+	ComplexChild,
+	CustomSupportedType,
 } from './types';
+import { toArray } from './utils';
 
-export const plugins: Plugin[] = [];
+const plugins: Plugin[] = [];
+
+const customSupportedTypes: CustomSupportedType<any>[] = [];
 
 const initRef = <E extends ElementNames>(
 	element: HTMLElementTagNameMap[E],
@@ -28,12 +33,14 @@ const create = <E extends ElementNames, C extends Component>(
 	name: E | C,
 	props: Attributes<HTMLElementTagNameMap[E]> | Parameters<C>[0],
 	...children: Child[]
-): HTMLElement => {
+): JSX.Element => {
 	if (typeof name === 'function') {
-		return name({
+		const result = name({
 			...props,
 			children,
 		});
+
+		return result;
 	}
 
 	const attr = props as Attributes<HTMLElementTagNameMap[E]>;
@@ -42,8 +49,6 @@ const create = <E extends ElementNames, C extends Component>(
 
 	appendChild(element, children);
 	initRef(element, attr);
-
-	console.log(plugins);
 
 	plugins.forEach((plugin) => {
 		// TODO: catch any error and throw and custom error
@@ -55,20 +60,61 @@ const create = <E extends ElementNames, C extends Component>(
 	return element;
 };
 
-const render = (element: HTMLElement, parent: HTMLElement) => {
-	parent.appendChild(element);
+const render = (element: Node | Node[], parent: HTMLElement) => {
+	const ref = createRef<HTMLElement>();
+	ref.current = parent;
+	append(ref, element);
 };
 
-const appendChild = (element: HTMLElement, children: Children) => {
-	if (Array.isArray(children)) {
-		children.forEach((child) => {
-			appendChild(element, child);
-		});
-	} else if (children instanceof HTMLElement) {
-		element.appendChild(children);
-	} else if (typeof children !== 'boolean') {
-		element.appendChild(document.createTextNode(String(children)));
+const childToNodes = (
+	child: ComplexChild | null,
+	parent: HTMLElement,
+	nullAsNode = false,
+): Node[] => {
+	if (Array.isArray(child)) {
+		return child.reduce<Node[]>((list, current) => {
+			return list.concat(childToNodes(current, parent));
+		}, []);
 	}
+
+	for (let index = 0; index < customSupportedTypes.length; index++) {
+		const element = customSupportedTypes[index];
+		if (element.checkType(child)) {
+			return element.parser(child, parent);
+		}
+	}
+
+	if (child instanceof HTMLElement) {
+		return [child];
+	} else if (typeof child === 'string') {
+		return [document.createTextNode(child)];
+	} else if (child && typeof child !== 'boolean') {
+		return [document.createTextNode(String(child))];
+	} else if (nullAsNode && child === null) {
+		return [document.createTextNode('')];
+	}
+
+	return [];
+};
+
+const appendComplexChild = (
+	element: HTMLElement,
+	children: ComplexChild | ComplexChild[],
+) => {
+	const childList = toArray(children);
+
+	for (let index = 0; index < childList.length; index++) {
+		const nodes = childToNodes(childList[index], element);
+		for (let index = 0; index < nodes.length; index++) {
+			element.appendChild(nodes[index]);
+		}
+	}
+};
+
+const appendChild = (element: HTMLElement, children: Child[]) => {
+	children.map((child) => {
+		appendComplexChild(element, child);
+	});
 };
 
 const onReady = <T>(ref: Ref<T>, handler: OnReady) => {
@@ -109,7 +155,7 @@ const setStyles = <T extends HTMLElement>(ref: Ref<T>, styles: Styles) => {
 
 const append = <T extends HTMLElement>(ref: Ref<T>, children: Children) => {
 	if (ref.current) {
-		appendChild(ref.current, children);
+		appendChild(ref.current, toArray(children));
 	} else {
 		onReady(ref, () => append(ref, children));
 	}
@@ -129,7 +175,7 @@ const replaceContent = <T extends HTMLElement>(
 ) => {
 	if (ref.current) {
 		ref.current.innerHTML = '';
-		appendChild(ref.current, children);
+		appendChild(ref.current, toArray(children));
 	} else {
 		onReady(ref, () => replaceContent(ref, children));
 	}
@@ -142,7 +188,7 @@ const createRef = <T>(): Ref<T> => {
 	const ref = {
 		handlers,
 		set current(newValue: T) {
-			if (value === null) {
+			if (!value) {
 				value = newValue;
 				handlers.forEach((handler) => {
 					// TODO: catch any error and throw and custom error
@@ -163,8 +209,12 @@ const createRef = <T>(): Ref<T> => {
 };
 
 export {
+	childToNodes,
+	customSupportedTypes,
+	plugins,
 	render,
 	replaceContent,
+	onReady,
 	remove,
 	setStyles,
 	create,

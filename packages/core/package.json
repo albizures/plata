@@ -1,6 +1,6 @@
 {
 	"name": "@plata/core",
-	"version": "0.0.4",
+	"version": "0.0.6",
 	"description": "A 1kb JS library for building user interfaces",
 	"main": "dist/index.js",
 	"module": "dist/index.module.js",
@@ -11,12 +11,15 @@
 	"license": "MIT",
 	"author": "Jose Albizures <jose@albizures.com>",
 	"files": [
-		"dist"
+		"dist",
+		"src"
 	],
 	"scripts": {
-		"prepublish": "rm -rf dist && yarn build",
-		"build": "microbundle build --raw --no-sourcemap",
-		"watch": "microbundle watch --raw"
+		"clean": "rm -rf dist",
+		"prepublish": "yarn build",
+		"prebuild": "yarn clean",
+		"build": "microbundle build --raw --no-sourcemap --name Plata",
+		"watch": "microbundle watch --raw --no-compress --name Plata"
 	},
 	"dependencies": {},
 	"devDependencies": {
