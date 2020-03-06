@@ -11,6 +11,8 @@ import {
 	Plugin,
 	ComplexChild,
 	CustomSupportedType,
+	CreatedChildren,
+	ResolvedChild,
 } from './types';
 import { toArray } from './utils';
 
@@ -29,11 +31,11 @@ const initRef = <E extends ElementNames>(
 	props.ref.current = element;
 };
 
-const create = <E extends ElementNames, C extends Component>(
+const create = async <E extends ElementNames, C extends Component>(
 	name: E | C,
 	props: Attributes<HTMLElementTagNameMap[E]> | Parameters<C>[0],
 	...children: Child[]
-): JSX.Element => {
+): CreatedChildren => {
 	if (typeof name === 'function') {
 		const result = name({
 			...props,
@@ -60,21 +62,27 @@ const create = <E extends ElementNames, C extends Component>(
 	return element;
 };
 
-const render = (element: Node | Node[], parent: HTMLElement) => {
+const render = async (element: CreatedChildren, parent: HTMLElement) => {
 	const ref = createRef<HTMLElement>();
 	ref.current = parent;
-	append(ref, element);
+	append(ref, await element);
 };
 
-const childToNodes = (
-	child: ComplexChild | null,
+const childToNodes = async (
+	child: ResolvedChild | null,
 	parent: HTMLElement,
 	nullAsNode = false,
-): Node[] => {
+): Promise<Node[]> => {
 	if (Array.isArray(child)) {
-		return child.reduce<Node[]>((list, current) => {
-			return list.concat(childToNodes(current, parent));
-		}, []);
+		const nodesList = await Promise.all(
+			child.map((current) => {
+				return childToNodes(current, parent);
+			}),
+		);
+
+		return nodesList.reduce((list, currentList) => {
+			return list.concat(currentList);
+		});
 	}
 
 	for (let index = 0; index < customSupportedTypes.length; index++) {
@@ -97,24 +105,29 @@ const childToNodes = (
 	return [];
 };
 
-const appendComplexChild = (
+const appendComplexChild = async (
 	element: HTMLElement,
-	children: ComplexChild | ComplexChild[],
+	children: ResolvedChild | ResolvedChild[],
 ) => {
 	const childList = toArray(children);
 
 	for (let index = 0; index < childList.length; index++) {
-		const nodes = childToNodes(childList[index], element);
+		const nodes = await childToNodes(
+			childList[index] as ResolvedChild,
+			element,
+		);
 		for (let index = 0; index < nodes.length; index++) {
 			element.appendChild(nodes[index]);
 		}
 	}
 };
 
-const appendChild = (element: HTMLElement, children: Child[]) => {
-	children.map((child) => {
-		appendComplexChild(element, child);
-	});
+const appendChild = async (element: HTMLElement, children: Children[]) => {
+	await Promise.all(
+		children.map(async (child) => {
+			return appendComplexChild(element, await child);
+		}),
+	);
 };
 
 const onReady = <T>(ref: Ref<T>, handler: OnReady) => {

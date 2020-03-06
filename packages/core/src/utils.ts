@@ -1,3 +1,7 @@
-const toArray = <T>(item: T | T[]): T[] => ([] as T[]).concat(item);
+const toArray = <T>(item: T): T[] => {
+	const empty: T[] = [];
+
+	return empty.concat(item);
+};
 
 export { toArray };

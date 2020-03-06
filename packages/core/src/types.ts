@@ -11,27 +11,30 @@ export interface Observable<T> {
 
 export interface CustomSupportedType<T> {
 	checkType: (child: unknown) => child is T;
-	parser: (child: T, parent: HTMLElement) => Node[];
+	parser: (child: T, parent: HTMLElement) => Promise<Node[]>;
 }
 
 export type SimpleChild = string | number | boolean | Node;
-export type ObservableChildren = SimpleChild | SimpleChild[];
+export type ObservableChildren =
+	| SimpleChild
+	| SimpleChild[]
+	| Promise<SimpleChild | SimpleChild[]>;
 export type ObservableChild = Observable<ObservableChildren>;
 export type ComplexChild = ObservableChild | SimpleChild;
 export type ResolvedChild = ComplexChild | ComplexChild[];
 
-export type Child = ResolvedChild; //| Promise<ResolvedChild>;
+export type Child = ResolvedChild;
 
-export type Children = Child | Child[];
+export type Children = Child | Child[] | Promise<Child>;
 export type Styles = Partial<CSSStyleDeclaration>;
 
 export type CreatedChild = Node;
 
-export type CreatedChildren = CreatedChild;
+export type CreatedChildren = Promise<CreatedChild>;
 
 export type Component<P = {}> = (
 	props: P & { children?: Children },
-) => JSX.Element;
+) => Promise<CreatedChild>;
 
 type TargetEvent<E, T extends HTMLElement> = Omit<E, 'target'> & {
 	target: T;
@@ -82,9 +85,9 @@ export type Elements = {
 
 declare global {
 	namespace JSX {
-		export interface IntrinsicElements extends Elements {}
-		export interface Element extends CreatedChildren {}
-		export interface IntrinsicAttributes {
+		type Element = CreatedChildren;
+		interface IntrinsicElements extends Elements {}
+		interface IntrinsicAttributes {
 			key?: any;
 		}
 	}

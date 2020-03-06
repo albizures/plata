@@ -32,28 +32,35 @@ const isObservable = <T>(observable: unknown): observable is Observable<T> => {
 	);
 };
 
-const observableValueToNodes = (
+const observableValueToNodes = async (
 	observable: ObservableChildren | null,
 	parent: HTMLElement,
 ) => {
-	return toArray(observable).reduce<Node[]>((nodes, current) => {
-		return nodes.concat(childToNodes(current, parent, true));
+	const childList = await Promise.all(toArray(observable));
+	const listNodes = await Promise.all(
+		childList.map((child) => {
+			return childToNodes(child, parent, true);
+		}),
+	);
+	return listNodes.reduce<Node[]>((nodes, current) => {
+		return nodes.concat(current);
 	}, []);
 };
 
 const customType: CustomSupportedType<ObservableChild> = {
 	checkType: isObservable,
-	parser: (child: ObservableChild, parent: HTMLElement) => {
-		const nodes = observableValueToNodes(child.value, parent);
+	parser: async (child: ObservableChild, parent: HTMLElement) => {
+		const nodes = await observableValueToNodes(child.value, parent);
 		let refElement: Node | null;
 		let oldNodes: Node[] = [];
 
-		child.watch((newValue) => {
-			const newNodes = observableValueToNodes(newValue, parent);
+		child.watch(async (newValue) => {
+			const newNodes = await observableValueToNodes(newValue, parent);
 
 			oldNodes.forEach((node) => {
 				parent.removeChild(node);
 			});
+
 			newNodes.reduce((ref, current) => {
 				if (ref && ref.parentNode) {
 					ref.parentNode.insertBefore(current, ref.nextSibling);

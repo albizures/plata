@@ -8,10 +8,11 @@
 	"author": "Jose Albizures <albizures3601@gmail.com>",
 	"license": "MIT",
 	"scripts": {
-		"bootstrap": "lerna bootstrap && lerna link",
+		"bootstrap": "lerna bootstrap",
 		"start": "lerna run start",
 		"build": "lerna run build",
 		"test:types": "tsc --noEmit",
+		"prewatch": "yarn run build --scope @plata/core",
 		"watch": "yarn lerna run watch --parallel"
 	},
 	"workspaces": {
