@@ -7,7 +7,7 @@ export {
 	ObservableChildren,
 	ComplexChild,
 	ResolvedChild,
-	CreatedChildren,
+	PlataElement,
 	Component,
 	EventHandler,
 	PEvent as Event,

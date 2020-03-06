@@ -25,16 +25,14 @@ export type ResolvedChild = ComplexChild | ComplexChild[];
 
 export type Child = ResolvedChild;
 
-export type Children = Child | Child[] | Promise<Child>;
+export type Children = Child | Child[] | PlataElement;
 export type Styles = Partial<CSSStyleDeclaration>;
 
-export type CreatedChild = Node;
-
-export type CreatedChildren = Promise<CreatedChild>;
+export type PlataElement = Promise<Node>;
 
 export type Component<P = {}> = (
 	props: P & { children?: Children },
-) => Promise<CreatedChild>;
+) => PlataElement;
 
 type TargetEvent<E, T extends HTMLElement> = Omit<E, 'target'> & {
 	target: T;
@@ -85,7 +83,7 @@ export type Elements = {
 
 declare global {
 	namespace JSX {
-		type Element = CreatedChildren;
+		type Element = PlataElement;
 		interface IntrinsicElements extends Elements {}
 		interface IntrinsicAttributes {
 			key?: any;

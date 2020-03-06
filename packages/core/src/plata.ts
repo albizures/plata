@@ -1,5 +1,4 @@
 import {
-	Child,
 	Children,
 	Component,
 	Ref,
@@ -9,9 +8,8 @@ import {
 	Attributes,
 	EventHandler,
 	Plugin,
-	ComplexChild,
 	CustomSupportedType,
-	CreatedChildren,
+	PlataElement,
 	ResolvedChild,
 } from './types';
 import { toArray } from './utils';
@@ -34,8 +32,8 @@ const initRef = <E extends ElementNames>(
 const create = async <E extends ElementNames, C extends Component>(
 	name: E | C,
 	props: Attributes<HTMLElementTagNameMap[E]> | Parameters<C>[0],
-	...children: Child[]
-): CreatedChildren => {
+	...children: Children[]
+): PlataElement => {
 	if (typeof name === 'function') {
 		const result = name({
 			...props,
@@ -62,7 +60,7 @@ const create = async <E extends ElementNames, C extends Component>(
 	return element;
 };
 
-const render = async (element: CreatedChildren, parent: HTMLElement) => {
+const render = async (element: PlataElement, parent: HTMLElement) => {
 	const ref = createRef<HTMLElement>();
 	ref.current = parent;
 	append(ref, await element);
