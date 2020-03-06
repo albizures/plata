@@ -42,6 +42,7 @@ const observableValueToNodes = async (
 			return childToNodes(child, parent, true);
 		}),
 	);
+
 	return listNodes.reduce<Node[]>((nodes, current) => {
 		return nodes.concat(current);
 	}, []);
@@ -52,7 +53,7 @@ const customType: CustomSupportedType<ObservableChild> = {
 	parser: async (child: ObservableChild, parent: HTMLElement) => {
 		const nodes = await observableValueToNodes(child.value, parent);
 		let refElement: Node | null;
-		let oldNodes: Node[] = [];
+		let oldNodes: Node[] = nodes;
 
 		child.watch(async (newValue) => {
 			const newNodes = await observableValueToNodes(newValue, parent);
