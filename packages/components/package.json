@@ -1,0 +1,35 @@
+{
+	"name": "@plata/components",
+	"version": "0.0.6",
+	"description": "plata plugin to support react-like prop events",
+	"main": "dist/index.js",
+	"module": "dist/index.module.js",
+	"umd:main": "dist/index.umd.js",
+	"source": "src/index.tsx",
+	"types": "dist/index.d.ts",
+	"unpkg": "dist/index.umd.js",
+	"license": "MIT",
+	"author": "Jose Albizures <jose@albizures.com>",
+	"files": [
+		"dist",
+		"src"
+	],
+	"scripts": {
+		"clean": "rm -rf dist",
+		"prepublish": "yarn build",
+		"prebuild": "yarn clean",
+		"build": "microbundle build --raw --no-sourcemap --jsx P.create",
+		"watch": "microbundle watch --raw --no-compress --jsx P.create"
+	},
+	"peerDependencies": {
+		"@plata/core": "^0.0.6",
+		"@plata/observables": "^0.0.6"
+	},
+	"devDependencies": {
+		"@babel/preset-typescript": "^7.8.3",
+		"microbundle": "^0.11.0",
+		"typescript": "^3.8.3",
+		"@plata/core": "*",
+		"@plata/observables": "*"
+	}
+}
