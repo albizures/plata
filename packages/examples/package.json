@@ -6,9 +6,14 @@
 	"scripts": {
 		"start": "parcel src/index.html --open"
 	},
+	"browserslist": [
+		"last 2 Chrome versions"
+	],
 	"dependencies": {
 		"@plata/core": "*",
 		"@plata/prop-events": "*",
+		"@plata/components": "*",
+		"@plata/observables": "*",
 		"parcel": "^1.12.4"
 	}
 }

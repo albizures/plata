@@ -22,4 +22,7 @@ const Counter = () => {
 	);
 };
 
-P.render(<Counter />, document.getElementById('root'));
+const root = document.getElementById('root');
+if (root) {
+	P.render(<Counter />, root);
+}

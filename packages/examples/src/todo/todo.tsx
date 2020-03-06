@@ -23,18 +23,17 @@ const Todo = (props: PropTypes) => {
 	);
 };
 
-const Counter = () => {
+const Todos = () => {
 	const buttonRef = P.createRef<HTMLButtonElement>();
 	const listRef = P.createRef<HTMLUListElement>();
 	const inputRef = P.createRef<HTMLInputElement>();
 	let todos: Todo[] = [];
 
 	P.on(buttonRef, 'click', () => {
-		const name = inputRef.current.value;
-
-		if (name === '') {
+		if (!inputRef.current || inputRef.current.value === '') {
 			return;
 		}
+		const name = inputRef.current.value;
 
 		const todo = { name };
 		todos.push(todo);
@@ -61,4 +60,7 @@ const Counter = () => {
 	);
 };
 
-P.render(<Counter />, document.getElementById('root'));
+const root = document.getElementById('root');
+if (root) {
+	P.render(<Todos />, root);
+}
