@@ -8,6 +8,7 @@
 	"author": "Jose Albizures <albizures3601@gmail.com>",
 	"license": "MIT",
 	"scripts": {
+		"bootstrap": "lerna bootstrap && lerna link",
 		"start": "lerna run start",
 		"build": "lerna run build",
 		"test:types": "tsc --noEmit",
@@ -15,7 +16,8 @@
 	},
 	"workspaces": {
 		"packages": [
-			"packages/*"
+			"packages/*",
+			"examples"
 		]
 	},
 	"dependencies": {

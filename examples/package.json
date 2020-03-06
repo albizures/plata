@@ -10,10 +10,12 @@
 		"last 2 Chrome versions"
 	],
 	"dependencies": {
-		"@plata/core": "*",
-		"@plata/prop-events": "*",
 		"@plata/components": "*",
+		"@plata/core": "*",
 		"@plata/observables": "*",
+		"@plata/prop-events": "*"
+	},
+	"devDependencies": {
 		"parcel": "^1.12.4"
 	}
 }
