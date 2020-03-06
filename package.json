@@ -9,6 +9,7 @@
 	"license": "MIT",
 	"scripts": {
 		"bootstrap": "lerna bootstrap",
+		"clean": "lerna clean && lerna run clean",
 		"start": "lerna run start",
 		"build": "lerna run build",
 		"test:types": "tsc --noEmit",

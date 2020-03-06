@@ -1,5 +1,5 @@
 import { createObservable } from '@plata/observables';
-import * as P from '@plata/core/src';
+import * as P from '@plata/core';
 
 const Hello = () => {
 	const inputRef = P.createRef<HTMLInputElement>();

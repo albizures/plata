@@ -1,4 +1,5 @@
 import '@plata/prop-events';
+import { Wait, Fragment } from '@plata/components';
 import { createObservable } from '@plata/observables';
 import * as P from '@plata/core/src';
 
@@ -6,21 +7,18 @@ interface User {
 	first_name: string;
 }
 
-const UserList: P.Component = () => {
-	const observable = createObservable<P.Children>();
+const UserList: P.Component = async () => {
+	const response = await fetch('https://reqres.in/api/users');
+	const { data } = await response.json();
+	const users = data as User[];
 
-	fetch('https://reqres.in/api/users').then(async (response) => {
-		const { data } = await response.json();
-		const users = data as User[];
-
-		setTimeout(() => {
-			observable.value = users.map((user) => {
+	return (
+		<Fragment>
+			{users.map((user) => {
 				return <li>{user.first_name}</li>;
-			});
-		}, 1000);
-	});
-
-	return <div>{observable}</div>;
+			})}
+		</Fragment>
+	);
 };
 
 const Users = () => {
@@ -31,9 +29,13 @@ const Users = () => {
 		name.value = event.target.value;
 	});
 
+	const fallback = <div>loading...</div>;
+
 	return (
 		<ul>
-			<UserList />
+			<Wait fallback={fallback} waitAtLeast={1000}>
+				<UserList />
+			</Wait>
 		</ul>
 	);
 };

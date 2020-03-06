@@ -16,6 +16,6 @@
 		"@plata/prop-events": "*"
 	},
 	"devDependencies": {
-		"parcel": "^1.12.4"
+		"parcel-bundler": "^1.12.4"
 	}
 }
