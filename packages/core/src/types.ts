@@ -15,23 +15,24 @@ export interface CustomSupportedType<T> {
 }
 
 export type SimpleChild = string | number | boolean | Node;
-export type ObservableChildren =
+export type ObservableValues =
 	| SimpleChild
 	| SimpleChild[]
 	| Promise<SimpleChild | SimpleChild[]>;
-export type ObservableChild = Observable<ObservableChildren>;
+export type ObservableChild = Observable<ObservableValues>;
 export type ComplexChild = ObservableChild | SimpleChild;
 export type ResolvedChild = ComplexChild | ComplexChild[];
 
 export type Child = ResolvedChild;
 
-export type Children = Child | Child[] | PlataElement;
+export type Children = Child | Child[] | PlataElement | PlataElement[];
+export type FlattedChildren = Child | PlataElement;
 export type Styles = Partial<CSSStyleDeclaration>;
 
-export type PlataElement = Promise<Node>;
+export type PlataElement = Promise<Node | Node[]>;
 
 export type Component<P = {}> = (
-	props: P & { children?: Children },
+	props: { children?: Children } & P,
 ) => PlataElement;
 
 type TargetEvent<E, T extends HTMLElement> = Omit<E, 'target'> & {

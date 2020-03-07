@@ -1,10 +1,14 @@
-import { toArray, customSupportedTypes, childToNodes } from '@plata/core';
+import {
+	toArray,
+	customSupportedTypes,
+	childToNodes,
+	ObservableValues,
+} from '@plata/core';
 import {
 	Observable,
 	ObservableWatcher,
 	CustomSupportedType,
 	ObservableChild,
-	ObservableChildren,
 } from '@plata/core/src/types';
 
 const createObservable = <T>(defaultValue: T | null = null) => {
@@ -33,7 +37,7 @@ const isObservable = <T>(observable: unknown): observable is Observable<T> => {
 };
 
 const observableValueToNodes = async (
-	observable: ObservableChildren | null,
+	observable: ObservableValues | null,
 	parent: HTMLElement,
 ) => {
 	const childList = await Promise.all(toArray(observable));

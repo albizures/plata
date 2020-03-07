@@ -1,32 +1,37 @@
 import * as P from '@plata/core';
 import { createObservable } from '@plata/observables';
-import { flat } from './utils';
 
 interface TryPropTypes {
 	fallback?: P.Children;
+	children: P.ObservableValues;
+}
+
+function notUndefined<T>(x: T | undefined): x is T {
+	return x !== undefined;
 }
 
 const Try: P.Component<TryPropTypes> = async (props) => {
 	const { children, fallback } = props;
 	try {
 		const resolvedChildren = await Promise.all(P.toArray(children));
+		const b = resolvedChildren.filter(notUndefined);
 
-		return <Fragment>{resolvedChildren}</Fragment>;
+		return <Fragment>{b}</Fragment>;
 	} catch (error) {
 		console.error(error);
 
-		return <Fragment>{fallback || null}</Fragment>;
+		return <Fragment>{fallback}</Fragment>;
 	}
 };
 
 interface WaitPropTypes {
-	fallback?: P.Children;
+	fallback?: P.ObservableValues;
 	waitAtLeast?: number;
 }
 
 const Wait: P.Component<WaitPropTypes> = (props) => {
 	const { fallback, waitAtLeast = 0 } = props;
-	const observable = createObservable<P.Children>();
+	const observable = createObservable<P.ObservableValues>();
 	if (fallback) {
 		observable.value = fallback;
 	}
@@ -48,7 +53,7 @@ const Wait: P.Component<WaitPropTypes> = (props) => {
 // @ts-ignore
 const Fragment: P.Component = async (props) => {
 	const observable = createObservable<(P.Children | undefined)[]>(
-		flat(props.children),
+		P.flat(props.children),
 	);
 
 	return observable;

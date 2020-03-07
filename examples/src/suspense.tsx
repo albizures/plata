@@ -1,6 +1,5 @@
 import '@plata/prop-events';
 import { Wait, Fragment } from '@plata/components';
-import { createObservable } from '@plata/observables';
 import * as P from '@plata/core/src';
 
 interface User {

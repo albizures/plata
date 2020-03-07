@@ -11,8 +11,10 @@ import {
 	CustomSupportedType,
 	PlataElement,
 	ResolvedChild,
+	FlattedChildren,
+	Child,
 } from './types';
-import { toArray } from './utils';
+import { toArray, flat } from './utils';
 
 const plugins: Plugin[] = [];
 
@@ -39,7 +41,6 @@ const create = async <E extends ElementNames, C extends Component>(
 			...props,
 			children,
 		});
-
 		return result;
 	}
 
@@ -47,7 +48,10 @@ const create = async <E extends ElementNames, C extends Component>(
 
 	const element = document.createElement(name);
 
-	await appendChild(element, children);
+	await appendChildren(
+		element,
+		await Promise.all(flat<Child | PlataElement>(children)),
+	);
 	initRef(element, attr);
 
 	plugins.forEach((plugin) => {
@@ -60,10 +64,13 @@ const create = async <E extends ElementNames, C extends Component>(
 	return element;
 };
 
-const render = async (element: PlataElement, parent: HTMLElement) => {
+const render = async (promise: PlataElement, parent: HTMLElement) => {
 	const ref = createRef<HTMLElement>();
 	ref.current = parent;
-	append(ref, await element);
+	const elements = toArray(await promise);
+	elements.forEach((element) => {
+		append(ref, element);
+	});
 };
 
 const childToNodes = async (
@@ -120,7 +127,10 @@ const appendComplexChild = async (
 	}
 };
 
-const appendChild = async (element: HTMLElement, children: Children[]) => {
+const appendChildren = async (
+	element: HTMLElement,
+	children: FlattedChildren[],
+) => {
 	await Promise.all(
 		children.map(async (child) => {
 			return appendComplexChild(element, await child);
@@ -164,9 +174,12 @@ const setStyles = <T extends HTMLElement>(ref: Ref<T>, styles: Styles) => {
 	}
 };
 
-const append = <T extends HTMLElement>(ref: Ref<T>, children: Children) => {
+const append = <T extends HTMLElement>(
+	ref: Ref<T>,
+	children: FlattedChildren,
+) => {
 	if (ref.current) {
-		appendChild(ref.current, toArray(children));
+		appendChildren(ref.current, [children]);
 	} else {
 		onReady(ref, () => append(ref, children));
 	}
@@ -182,11 +195,11 @@ const remove = <T extends HTMLElement>(ref: Ref<T>) => {
 
 const replaceContent = <T extends HTMLElement>(
 	ref: Ref<T>,
-	children: Children,
+	children: FlattedChildren,
 ) => {
 	if (ref.current) {
 		ref.current.innerHTML = '';
-		appendChild(ref.current, toArray(children));
+		appendChildren(ref.current, [children]);
 	} else {
 		onReady(ref, () => replaceContent(ref, children));
 	}

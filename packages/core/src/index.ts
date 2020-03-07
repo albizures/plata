@@ -1,10 +1,10 @@
 export * from './plata';
-export { toArray } from './utils';
+export { toArray, flat } from './utils';
 export {
 	Ref,
 	Children,
 	Child,
-	ObservableChildren,
+	ObservableValues,
 	ComplexChild,
 	ResolvedChild,
 	PlataElement,
