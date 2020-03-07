@@ -2,6 +2,23 @@ import * as P from '@plata/core';
 import { createObservable } from '@plata/observables';
 import { flat } from './utils';
 
+interface TryPropTypes {
+	fallback?: P.Children;
+}
+
+const Try: P.Component<TryPropTypes> = async (props) => {
+	const { children, fallback } = props;
+	try {
+		const resolvedChildren = await Promise.all(P.toArray(children));
+
+		return <Fragment>{resolvedChildren}</Fragment>;
+	} catch (error) {
+		console.error(error);
+
+		return <Fragment>{fallback || null}</Fragment>;
+	}
+};
+
 interface WaitPropTypes {
 	fallback?: P.Children;
 	waitAtLeast?: number;
@@ -37,4 +54,4 @@ const Fragment: P.Component = async (props) => {
 	return observable;
 };
 
-export { Fragment, Wait };
+export { Fragment, Wait, Try };
