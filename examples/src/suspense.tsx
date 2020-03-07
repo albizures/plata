@@ -22,13 +22,6 @@ const UserList: P.Component = async () => {
 };
 
 const Users = () => {
-	const inputRef = P.createRef<HTMLInputElement>();
-	const name = createObservable<string>('');
-
-	P.on(inputRef, 'keyup', (event: P.ChangeEvent<HTMLInputElement>) => {
-		name.value = event.target.value;
-	});
-
 	const fallback = <div>loading...</div>;
 
 	return (

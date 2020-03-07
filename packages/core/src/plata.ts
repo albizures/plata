@@ -47,7 +47,7 @@ const create = async <E extends ElementNames, C extends Component>(
 
 	const element = document.createElement(name);
 
-	appendChild(element, children);
+	await appendChild(element, children);
 	initRef(element, attr);
 
 	plugins.forEach((plugin) => {
