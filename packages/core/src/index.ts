@@ -1,4 +1,5 @@
 export * from './plata';
+export * from './FallbackError';
 export { flat } from './utils';
 export {
 	Ref,

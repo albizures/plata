@@ -18,9 +18,7 @@ const Try: P.Component<TryPropTypes> = async (props) => {
 
 		return <Fragment>{childListe}</Fragment>;
 	} catch (error) {
-		console.error(error);
-
-		return <Fragment>{fallback}</Fragment>;
+		throw new P.FallbackError(error, (<Fragment>{fallback}</Fragment>));
 	}
 };
 

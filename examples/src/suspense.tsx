@@ -1,5 +1,5 @@
 import '@plata/prop-events';
-import { Wait, Fragment } from '@plata/components';
+import { Wait, Fragment, Try } from '@plata/components';
 import * as P from '@plata/core/src';
 
 interface User {
@@ -26,7 +26,9 @@ const Users = () => {
 	return (
 		<ul>
 			<Wait fallback={fallback} waitAtLeast={1000}>
-				<UserList />
+				<Try fallback={<span>failed :(</span>}>
+					<UserList />
+				</Try>
 			</Wait>
 		</ul>
 	);

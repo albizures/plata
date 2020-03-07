@@ -3,15 +3,13 @@ import {
 	childToNodes,
 	ObservableValues,
 	flat,
-	Child,
-	FlattedChild,
+	FallbackError,
 } from '@plata/core';
 import {
 	Observable,
 	ObservableWatcher,
 	CustomSupportedType,
 	ObservableChild,
-	SimpleChild,
 } from '@plata/core/src/types';
 
 const createObservable = <T>(defaultValue: T | null = null) => {
@@ -43,8 +41,6 @@ const observableValueToNodes = async (
 	observable: ObservableValues,
 	parent: HTMLElement,
 ): Promise<Node[]> => {
-	// observable
-
 	if (Array.isArray(observable)) {
 		const nodes = await Promise.all(
 			flat(observable).map((item) => {
@@ -57,15 +53,36 @@ const observableValueToNodes = async (
 	return childToNodes(observable, parent, true);
 };
 
+const checkByError = async (
+	newValue: ObservableValues,
+	parent: HTMLElement,
+): Promise<Node[]> => {
+	try {
+		return await observableValueToNodes(newValue, parent);
+	} catch (error) {
+		if (error instanceof FallbackError || error.fallback) {
+			console.error(error.originalError);
+
+			try {
+				return await observableValueToNodes(error.fallback, parent);
+			} catch {}
+		} else {
+			throw error;
+		}
+	}
+
+	return [];
+};
+
 const customType: CustomSupportedType<ObservableChild> = {
 	checkType: isObservable,
 	parser: async (child: ObservableChild, parent: HTMLElement) => {
-		const nodes = await observableValueToNodes(child.value, parent);
+		const nodes = await checkByError(child.value, parent);
 		let refElement: Node | null;
 		let oldNodes: Node[] = nodes;
 
 		child.watch(async (newValue) => {
-			const newNodes = await observableValueToNodes(newValue, parent);
+			const newNodes = await checkByError(newValue, parent);
 
 			oldNodes.forEach((node) => {
 				parent.removeChild(node);
