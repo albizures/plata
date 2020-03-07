@@ -13,8 +13,8 @@ function notUndefined<T>(x: T | undefined): x is T {
 const Try: P.Component<TryPropTypes> = async (props) => {
 	const { children, fallback } = props;
 	try {
-		const resolvedChildren = await Promise.all(P.toArray(children));
-		const b = resolvedChildren.filter(notUndefined);
+		const Children = await Promise.all([...children]);
+		const b = Children.filter(notUndefined);
 
 		return <Fragment>{b}</Fragment>;
 	} catch (error) {

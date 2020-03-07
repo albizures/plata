@@ -1,5 +1,4 @@
 import {
-	toArray,
 	customSupportedTypes,
 	childToNodes,
 	ObservableValues,
@@ -40,7 +39,7 @@ const observableValueToNodes = async (
 	observable: ObservableValues | null,
 	parent: HTMLElement,
 ) => {
-	const childList = await Promise.all(toArray(observable));
+	const childList = await Promise.all([...observable]);
 	const listNodes = await Promise.all(
 		childList.map((child) => {
 			return childToNodes(child, parent, true);

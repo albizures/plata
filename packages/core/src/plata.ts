@@ -1,5 +1,4 @@
 import {
-	Children,
 	Component,
 	Ref,
 	OnReady,
@@ -10,11 +9,10 @@ import {
 	Plugin,
 	CustomSupportedType,
 	PlataElement,
-	ResolvedChild,
-	FlattedChildren,
 	Child,
+	FlattedChild,
 } from './types';
-import { toArray, flat } from './utils';
+import { flat } from './utils';
 
 const plugins: Plugin[] = [];
 
@@ -34,7 +32,7 @@ const initRef = <E extends ElementNames>(
 const create = async <E extends ElementNames, C extends Component>(
 	name: E | C,
 	props: Attributes<HTMLElementTagNameMap[E]> | Parameters<C>[0],
-	...children: Children[]
+	...children: Child[]
 ): PlataElement => {
 	if (typeof name === 'function') {
 		const result = name({
@@ -48,10 +46,11 @@ const create = async <E extends ElementNames, C extends Component>(
 
 	const element = document.createElement(name);
 
-	await appendChildren(
-		element,
-		await Promise.all(flat<Child | PlataElement>(children)),
-	);
+	const resolvedChildren = await Promise.all<FlattedChild | Node[]>(children);
+
+	const flattedChildren = flat<FlattedChild>(resolvedChildren);
+
+	await appendChildren(element, flattedChildren);
 	initRef(element, attr);
 
 	plugins.forEach((plugin) => {
@@ -64,20 +63,18 @@ const create = async <E extends ElementNames, C extends Component>(
 	return element;
 };
 
-const render = async (promise: PlataElement, parent: HTMLElement) => {
+const render = (element: PlataElement, parent: HTMLElement) => {
 	const ref = createRef<HTMLElement>();
 	ref.current = parent;
-	const elements = toArray(await promise);
-	elements.forEach((element) => {
-		append(ref, element);
-	});
+	return append(ref, element);
 };
 
 const childToNodes = async (
-	child: ResolvedChild | null,
+	items: Child | Node[] | null,
 	parent: HTMLElement,
 	nullAsNode = false,
 ): Promise<Node[]> => {
+	const child = await items;
 	if (Array.isArray(child)) {
 		const nodesList = await Promise.all(
 			child.map((current) => {
@@ -97,43 +94,31 @@ const childToNodes = async (
 		}
 	}
 
-	if (child instanceof HTMLElement) {
+	if (child instanceof Node) {
 		return [child];
 	} else if (typeof child === 'string') {
 		return [document.createTextNode(child)];
-	} else if (child && typeof child !== 'boolean') {
-		return [document.createTextNode(String(child))];
 	} else if (nullAsNode && child === null) {
 		return [document.createTextNode('')];
+	} else if (child && typeof child !== 'boolean') {
+		return [document.createTextNode(String(child))];
 	}
 
 	return [];
 };
 
-const appendComplexChild = async (
-	element: HTMLElement,
-	children: ResolvedChild | ResolvedChild[],
-) => {
-	const childList = toArray(children);
+const appendComplexChild = async (element: HTMLElement, child: Child) => {
+	const nodes = await childToNodes(child, element);
 
-	for (let index = 0; index < childList.length; index++) {
-		const nodes = await childToNodes(
-			childList[index] as ResolvedChild,
-			element,
-		);
-		for (let index = 0; index < nodes.length; index++) {
-			element.appendChild(nodes[index]);
-		}
+	for (let index = 0; index < nodes.length; index++) {
+		element.append(nodes[index]);
 	}
 };
 
-const appendChildren = async (
-	element: HTMLElement,
-	children: FlattedChildren[],
-) => {
-	await Promise.all(
-		children.map(async (child) => {
-			return appendComplexChild(element, await child);
+const appendChildren = (element: HTMLElement, children: FlattedChild[]) => {
+	return Promise.all(
+		children.map((child) => {
+			return appendComplexChild(element, child);
 		}),
 	);
 };
@@ -174,12 +159,12 @@ const setStyles = <T extends HTMLElement>(ref: Ref<T>, styles: Styles) => {
 	}
 };
 
-const append = <T extends HTMLElement>(
+const append = async <T extends HTMLElement>(
 	ref: Ref<T>,
-	children: FlattedChildren,
+	children: PlataElement,
 ) => {
 	if (ref.current) {
-		appendChildren(ref.current, [children]);
+		appendChildren(ref.current, flat(await children));
 	} else {
 		onReady(ref, () => append(ref, children));
 	}
@@ -193,13 +178,13 @@ const remove = <T extends HTMLElement>(ref: Ref<T>) => {
 	}
 };
 
-const replaceContent = <T extends HTMLElement>(
+const replaceContent = async <T extends HTMLElement>(
 	ref: Ref<T>,
-	children: FlattedChildren,
+	children: PlataElement,
 ) => {
 	if (ref.current) {
 		ref.current.innerHTML = '';
-		appendChildren(ref.current, [children]);
+		appendChildren(ref.current, flat(await children));
 	} else {
 		onReady(ref, () => replaceContent(ref, children));
 	}

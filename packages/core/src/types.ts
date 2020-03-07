@@ -15,18 +15,12 @@ export interface CustomSupportedType<T> {
 }
 
 export type SimpleChild = string | number | boolean | Node;
-export type ObservableValues =
-	| SimpleChild
-	| SimpleChild[]
-	| Promise<SimpleChild | SimpleChild[]>;
+export type ObservableValues = SimpleChild | SimpleChild[] | PlataElement;
 export type ObservableChild = Observable<ObservableValues>;
-export type ComplexChild = ObservableChild | SimpleChild;
-export type ResolvedChild = ComplexChild | ComplexChild[];
+export type Child = ObservableChild | SimpleChild | PlataElement;
 
-export type Child = ResolvedChild;
-
-export type Children = Child | Child[] | PlataElement | PlataElement[];
-export type FlattedChildren = Child | PlataElement;
+export type Children = Child[];
+export type FlattedChild = ObservableChild | SimpleChild;
 export type Styles = Partial<CSSStyleDeclaration>;
 
 export type PlataElement = Promise<Node | Node[]>;
