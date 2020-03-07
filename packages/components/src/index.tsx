@@ -23,16 +23,16 @@ const Try: P.Component<TryPropTypes> = async (props) => {
 };
 
 interface WaitPropTypes {
-	fallback?: P.PlataElement;
+	loading?: P.PlataElement;
 	children: P.Children;
 	waitAtLeast?: number;
 }
 
 const Wait: P.Component<WaitPropTypes> = (props) => {
-	const { fallback, waitAtLeast = 0 } = props;
+	const { loading, waitAtLeast = 0 } = props;
 	const observable = createObservable<P.PlataElement>();
-	if (fallback) {
-		observable.value = fallback;
+	if (loading) {
+		observable.value = loading;
 	}
 
 	const waitAtLeastPromise = new Promise((resolve) => {

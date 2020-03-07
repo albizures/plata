@@ -21,11 +21,11 @@ const UserList: P.Component = async () => {
 };
 
 const Users = () => {
-	const fallback = <div>loading...</div>;
+	const loading = <div>loading...</div>;
 
 	return (
 		<ul>
-			<Wait fallback={fallback} waitAtLeast={1000}>
+			<Wait loading={loading} waitAtLeast={1000}>
 				<Try fallback={<span>failed :(</span>}>
 					<UserList />
 				</Try>
