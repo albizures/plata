@@ -14,20 +14,19 @@ export interface CustomSupportedType<T> {
 	parser: (child: T, parent: HTMLElement) => Promise<Node[]>;
 }
 
-export type SimpleChild = string | number | boolean | Node;
+export type SimpleChild = string | number | boolean | Node | null;
 export type ObservableValues = SimpleChild | SimpleChild[] | PlataElement;
 export type ObservableChild = Observable<ObservableValues>;
 export type Child = ObservableChild | SimpleChild | PlataElement;
 
-export type Children = Child[];
+export type Children = Child | Child[];
 export type FlattedChild = ObservableChild | SimpleChild;
 export type Styles = Partial<CSSStyleDeclaration>;
 
 export type PlataElement = Promise<Node | Node[]>;
 
-export type Component<P = {}> = (
-	props: { children?: Children } & P,
-) => PlataElement;
+export type PropsWithChildren<P> = P & { children?: Children };
+export type Component<P = {}> = (props: PropsWithChildren<P>) => PlataElement;
 
 type TargetEvent<E, T extends HTMLElement> = Omit<E, 'target'> & {
 	target: T;
@@ -79,6 +78,12 @@ export type Elements = {
 declare global {
 	namespace JSX {
 		type Element = PlataElement;
+		interface ElementAttributesProperty {
+			props: {};
+		}
+		interface ElementChildrenAttribute {
+			children: Children;
+		}
 		interface IntrinsicElements extends Elements {}
 		interface IntrinsicAttributes {
 			key?: any;

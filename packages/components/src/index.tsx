@@ -13,10 +13,10 @@ function notUndefined<T>(x: T | undefined): x is T {
 const Try: P.Component<TryPropTypes> = async (props) => {
 	const { children, fallback } = props;
 	try {
-		const Children = await Promise.all([...children]);
-		const b = Children.filter(notUndefined);
+		const items = await Promise.all<P.Child | Node[]>(P.flat(children));
+		const childListe = P.flat(items.filter(notUndefined));
 
-		return <Fragment>{b}</Fragment>;
+		return <Fragment>{childListe}</Fragment>;
 	} catch (error) {
 		console.error(error);
 
@@ -25,13 +25,14 @@ const Try: P.Component<TryPropTypes> = async (props) => {
 };
 
 interface WaitPropTypes {
-	fallback?: P.ObservableValues;
+	fallback?: P.PlataElement;
+	children: P.Children;
 	waitAtLeast?: number;
 }
 
 const Wait: P.Component<WaitPropTypes> = (props) => {
 	const { fallback, waitAtLeast = 0 } = props;
-	const observable = createObservable<P.ObservableValues>();
+	const observable = createObservable<P.PlataElement>();
 	if (fallback) {
 		observable.value = fallback;
 	}
@@ -44,7 +45,9 @@ const Wait: P.Component<WaitPropTypes> = (props) => {
 
 	Promise.resolve(props.children).then(async (element) => {
 		await waitAtLeastPromise;
-		observable.value = element || null;
+		if (element) {
+			observable.value = Promise.resolve(element) as P.PlataElement;
+		}
 	});
 
 	return <Fragment>{observable}</Fragment>;

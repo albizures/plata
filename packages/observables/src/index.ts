@@ -2,12 +2,16 @@ import {
 	customSupportedTypes,
 	childToNodes,
 	ObservableValues,
+	flat,
+	Child,
+	FlattedChild,
 } from '@plata/core';
 import {
 	Observable,
 	ObservableWatcher,
 	CustomSupportedType,
 	ObservableChild,
+	SimpleChild,
 } from '@plata/core/src/types';
 
 const createObservable = <T>(defaultValue: T | null = null) => {
@@ -36,19 +40,21 @@ const isObservable = <T>(observable: unknown): observable is Observable<T> => {
 };
 
 const observableValueToNodes = async (
-	observable: ObservableValues | null,
+	observable: ObservableValues,
 	parent: HTMLElement,
-) => {
-	const childList = await Promise.all([...observable]);
-	const listNodes = await Promise.all(
-		childList.map((child) => {
-			return childToNodes(child, parent, true);
-		}),
-	);
+): Promise<Node[]> => {
+	// observable
 
-	return listNodes.reduce<Node[]>((nodes, current) => {
-		return nodes.concat(current);
-	}, []);
+	if (Array.isArray(observable)) {
+		const nodes = await Promise.all(
+			flat(observable).map((item) => {
+				return childToNodes(item, parent, true);
+			}, []),
+		);
+		return flat(nodes);
+	}
+
+	return childToNodes(observable, parent, true);
 };
 
 const customType: CustomSupportedType<ObservableChild> = {

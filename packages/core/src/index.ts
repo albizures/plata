@@ -8,6 +8,7 @@ export {
 	PlataElement,
 	Component,
 	EventHandler,
+	FlattedChild,
 	PEvent as Event,
 	ChangeEventHandler,
 	PChangeEvent as ChangeEvent,

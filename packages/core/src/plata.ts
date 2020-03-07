@@ -11,6 +11,7 @@ import {
 	PlataElement,
 	Child,
 	FlattedChild,
+	SimpleChild,
 } from './types';
 import { flat } from './utils';
 
@@ -180,7 +181,7 @@ const remove = <T extends HTMLElement>(ref: Ref<T>) => {
 
 const replaceContent = async <T extends HTMLElement>(
 	ref: Ref<T>,
-	children: PlataElement,
+	children: PlataElement | SimpleChild,
 ) => {
 	if (ref.current) {
 		ref.current.innerHTML = '';
